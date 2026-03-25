@@ -31,8 +31,13 @@ func (p *postgresRepo) SelectFeedbacks(par GetFeedbacksParams) ([]Feedback, int,
 
 	if par.Search != "" {
 		if par.WholeWord {
-			conditions = append(conditions, fmt.Sprintf("to_tsvector('simple', coalesce(feedback_text, '')) @@ plainto_tsquery('simple', $%d)", argID))
-			args = append(args, par.Search)
+			operator := "~"
+			if !par.CaseSensitive {
+				operator = "~*"
+			}
+
+			conditions = append(conditions, fmt.Sprintf("feedback_text %s $%d", operator, argID))
+			args = append(args, `\y`+par.Search+`\y`)
 			argID++
 		} else {
 			if par.CaseSensitive {
