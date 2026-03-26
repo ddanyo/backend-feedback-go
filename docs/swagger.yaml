@@ -1,0 +1,121 @@
+basePath: /
+definitions:
+  internal_feedback.Feedback:
+    properties:
+      date_time:
+        example: "2026-03-25T14:30:00Z"
+        type: string
+      feedback_text:
+        example: Отличный сервис!
+        type: string
+      id:
+        example: "1105"
+        type: string
+      rating:
+        example: 5
+        type: integer
+    required:
+    - rating
+    type: object
+  internal_feedback.FeedbacksResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/internal_feedback.Feedback'
+        type: array
+      total:
+        example: 150
+        type: integer
+      totalPages:
+        example: 15
+        type: integer
+    type: object
+  internal_feedback.HTTPError:
+    properties:
+      error:
+        example: Сообщение об ошибке
+        type: string
+    type: object
+host: localhost:2510
+info:
+  contact: {}
+  description: API сервиса для сбора и отображения отзывов.
+  title: Feedback System API
+  version: "1.0"
+paths:
+  /api:
+    get:
+      description: Возвращает список отзывов с поддержкой пагинации, поиска и сортировки
+      parameters:
+      - default: 0
+        description: Сколько записей пропустить (offset)
+        in: query
+        name: skip
+        type: integer
+      - default: 10
+        description: Сколько записей вернуть (limit)
+        in: query
+        name: take
+        type: integer
+      - description: Поисковый запрос
+        in: query
+        name: search
+        type: string
+      - default: false
+        description: Учитывать регистр при поиске
+        in: query
+        name: caseSensitive
+        type: boolean
+      - default: false
+        description: Искать только целые слова
+        in: query
+        name: wholeWord
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_feedback.FeedbacksResponse'
+        "400":
+          description: Неверные параметры запроса
+          schema:
+            $ref: '#/definitions/internal_feedback.HTTPError'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/internal_feedback.HTTPError'
+      summary: Получить список отзывов
+      tags:
+      - Feedbacks
+    post:
+      consumes:
+      - application/json
+      description: Создает новый отзыв в базе данных
+      parameters:
+      - description: Данные отзыва
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/internal_feedback.Feedback'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_feedback.Feedback'
+        "400":
+          description: Неверные параметры запроса
+          schema:
+            $ref: '#/definitions/internal_feedback.HTTPError'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/internal_feedback.HTTPError'
+      summary: Добавить новый отзыв
+      tags:
+      - Feedbacks
+swagger: "2.0"

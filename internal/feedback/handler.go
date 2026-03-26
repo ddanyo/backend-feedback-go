@@ -24,6 +24,20 @@ func NewHandler(f FeedbackService) *Handler {
 	}
 }
 
+// GetFeedback godoc
+// @Summary      Получить список отзывов
+// @Description  Возвращает список отзывов с поддержкой пагинации, поиска и сортировки
+// @Tags         Feedbacks
+// @Produce      json
+// @Param        skip          query int    false "Сколько записей пропустить (offset)" default(0)
+// @Param        take          query int    false "Сколько записей вернуть (limit)" default(10)
+// @Param        search        query string false "Поисковый запрос"
+// @Param        caseSensitive query bool   false "Учитывать регистр при поиске" default(false)
+// @Param        wholeWord     query bool   false "Искать только целые слова" default(false)
+// @Success      200 {object}  FeedbacksResponse
+// @Failure      400 {object} HTTPError "Неверные параметры запроса"
+// @Failure      500 {object} HTTPError "Внутренняя ошибка сервера"
+// @Router       /api [get]
 func (h *Handler) GetFeedback(c *gin.Context) {
 
 	var params GetFeedbacksParams
@@ -69,6 +83,17 @@ func (h *Handler) GetFeedback(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, response)
 }
 
+// PostFeedback godoc
+// @Summary      Добавить новый отзыв
+// @Description  Создает новый отзыв в базе данных
+// @Tags         Feedbacks
+// @Accept       json
+// @Produce      json
+// @Param        data body     Feedback true "Данные отзыва"
+// @Success      201      {object} Feedback
+// @Failure      400 {object} HTTPError "Неверные параметры запроса"
+// @Failure      500 {object} HTTPError "Внутренняя ошибка сервера"
+// @Router       /api [post]
 func (h *Handler) PostFeedback(c *gin.Context) {
 	var newFeed Feedback
 
