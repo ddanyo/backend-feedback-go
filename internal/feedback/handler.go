@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -79,6 +80,8 @@ func (h *Handler) PostFeedback(c *gin.Context) {
 		})
 		return
 	}
+
+	newFeed.Date_time = time.Now()
 
 	id, err := h.fservice.AddFeedback(newFeed)
 	if err != nil {
