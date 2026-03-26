@@ -64,14 +64,14 @@ func (p *postgresRepo) SelectFeedbacks(par GetFeedbacksParams) ([]Feedback, int,
 		return []Feedback{}, 0, nil
 	}
 
-	orderBy := "ORDER BY date_time DESC, id DESC"
+	orderBy := "ORDER BY id DESC, date_time DESC"
 	switch par.SortBy {
 	case "oldest":
-		orderBy = "ORDER BY date_time ASC, id ASC"
+		orderBy = "ORDER BY id ASC, date_time ASC"
 	case "rating_high":
-		orderBy = "ORDER BY rating DESC, id ASC"
+		orderBy = "ORDER BY rating DESC, id DESC"
 	case "rating_low":
-		orderBy = "ORDER BY rating ASC, id ASC"
+		orderBy = "ORDER BY rating ASC, id DESC"
 	}
 
 	limitOffset := fmt.Sprintf("LIMIT $%d OFFSET $%d", argID, argID+1)
