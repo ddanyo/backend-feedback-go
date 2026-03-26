@@ -22,7 +22,7 @@ services:
 
   backend:
     container_name: fs-backend-go
-    image: fs-backend-image
+    image: fs-backend-go-image
     build:
       context: .
       dockerfile: Dockerfile
